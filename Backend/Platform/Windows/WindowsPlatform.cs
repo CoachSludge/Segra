@@ -25,7 +25,7 @@ namespace Segra.Backend.Platform.Windows
                 using var icon = new NotifyIcon
                 {
                     Icon = Properties.Resources.icon,
-                    Text = "Segra",
+                    Text = "Fentware Clips",
                     Visible = true
                 };
 
@@ -95,7 +95,6 @@ namespace Segra.Backend.Platform.Windows
             if (DisplayService.GetPrimaryMonitorPhysicalResolution(out width, out height))
                 return true;
 
-            // Fall back to the logical (non-DPI-aware) resolution if the physical query failed.
             var primaryScreen = Screen.PrimaryScreen;
             if (primaryScreen != null)
             {
@@ -134,10 +133,9 @@ namespace Segra.Backend.Platform.Windows
                 CheckFileExists = true,
                 CheckPathExists = true,
                 Multiselect = false,
-                // Keep the process working directory pinned to the app directory.
                 RestoreDirectory = true
             };
-            return ofd.ShowDialog() == DialogResult.OK ? ofd.FileName : null;
+            return ofd.ShowDialog() == DialogResult.OK ? ofd.SelectedPath : null;
         });
 
         public Task<string[]?> PickFilesAsync(string title, string filterDescription, string extension) => RunSta<string[]?>(() =>
@@ -174,7 +172,6 @@ namespace Segra.Backend.Platform.Windows
             thread.Start();
         }
 
-        // WinForms dialogs and clipboard require an STA thread.
         private static Task<T> RunSta<T>(Func<T> func)
         {
             var tcs = new TaskCompletionSource<T>();
