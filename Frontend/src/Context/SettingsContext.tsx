@@ -13,10 +13,21 @@ import { sendMessageToBackend } from '../Utils/MessageUtils';
 
 export const SETTINGS_STORAGE_KEY = 'segra.settings.v1';
 
+// This branch is intentionally standalone. Keep Segra's existing airplane-mode behavior
+// permanently enabled so account, upload, and cloud UI stays unavailable without deleting
+// the underlying code we may want to reconnect later.
+const STANDALONE_MODE = true;
+
+function enforceStandaloneMode(value: Settings): Settings {
+  return STANDALONE_MODE ? { ...value, airplaneMode: true } : value;
+}
+
 type SettingsContextType = Settings;
 type SettingsUpdateContextType = (newSettings: Partial<Settings>, fromBackend?: boolean) => void;
 
-const SettingsContext = createContext<SettingsContextType>(initialSettings);
+const SettingsContext = createContext<SettingsContextType>(
+  enforceStandaloneMode(initialSettings),
+);
 const SettingsUpdateContext = createContext<SettingsUpdateContextType>(() => {});
 
 export function useSettings(): SettingsContextType {
@@ -37,7 +48,7 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
       const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
       if (!raw) return null;
       const cached = JSON.parse(raw);
-      return { ...initialSettings, ...cached };
+      return enforceStandaloneMode({ ...initialSettings, ...cached });
     } catch {
       return null;
     }
@@ -51,7 +62,9 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     }
   };
 
-  const [settings, setSettings] = useState<Settings>(() => loadCachedSettings() ?? initialSettings);
+  const [settings, setSettings] = useState<Settings>(() =>
+    enforceStandaloneMode(loadCachedSettings() ?? initialSettings),
+  );
   useWebSocketContext();
 
   const pendingBackendUpdateRef = useRef<Settings | null>(null);
@@ -59,7 +72,7 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
   const updateSettings = useCallback<SettingsUpdateContextType>(
     (newSettings, fromBackend = false) => {
       setSettings((prev) => {
-        const updatedSettings: Settings = { ...prev, ...newSettings };
+        const updatedSettings = enforceStandaloneMode({ ...prev, ...newSettings });
         saveCachedSettings(updatedSettings);
         if (!fromBackend) {
           pendingBackendUpdateRef.current = updatedSettings;
