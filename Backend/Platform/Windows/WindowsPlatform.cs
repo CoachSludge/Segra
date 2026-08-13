@@ -135,7 +135,7 @@ namespace Segra.Backend.Platform.Windows
                 Multiselect = false,
                 RestoreDirectory = true
             };
-            return ofd.ShowDialog() == DialogResult.OK ? ofd.SelectedPath : null;
+            return ofd.ShowDialog() == DialogResult.OK ? ofd.FileName : null;
         });
 
         public Task<string[]?> PickFilesAsync(string title, string filterDescription, string extension) => RunSta<string[]?>(() =>
