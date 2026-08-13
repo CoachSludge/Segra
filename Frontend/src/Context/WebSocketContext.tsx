@@ -1,7 +1,6 @@
-import { createContext, useContext, ReactNode, useCallback, useEffect, useRef } from 'react';
+import { createContext, useContext, ReactNode, useCallback, useRef } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { sendMessageToBackend } from '../Utils/MessageUtils';
-import { useAuth } from '../Hooks/useAuth.tsx';
 
 interface WebSocketContextType {
   sendMessage: (message: string) => void;
@@ -17,20 +16,11 @@ interface WebSocketMessage {
 }
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
-  // Get the auth session to properly handle authentication
-  const { session } = useAuth();
-  // Ref to track if this is a reconnection (not initial connection)
+  // Standalone mode: local backend websocket only, no auth/session dependency.
   const hasConnectedBefore = useRef(false);
 
-  // Log when the WebSocket provider mounts or session changes
-  useEffect(() => {
-    console.log('WebSocketProvider: Session state changed:', !!session);
-  }, [session]);
-
-  // Configure WebSocket with reconnection and heartbeat
   const { readyState } = useWebSocket('ws://localhost:44030/', {
     onOpen: () => {
-      // Check if this is a reconnection
       if (hasConnectedBefore.current) {
         console.log('WebSocket reconnected after disconnect - resyncing state');
       } else {
@@ -39,15 +29,6 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       }
 
       sendMessageToBackend('NewConnection');
-
-      // If we already have a session when connecting, ensure we're logged in
-      if (session) {
-        console.log('WebSocket connected with active session, ensuring login state');
-        sendMessageToBackend('Login', {
-          accessToken: session.access_token,
-          refreshToken: session.refresh_token,
-        });
-      }
     },
     onClose: (event) => {
       console.warn('WebSocket closed:', event.code, event.reason);
@@ -62,7 +43,6 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           console.log('WebSocket message received:', data);
         }
 
-        // Dispatch the message to all listeners
         window.dispatchEvent(
           new CustomEvent('websocket-message', {
             detail: data,
@@ -78,12 +58,6 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     },
     reconnectAttempts: Infinity,
     reconnectInterval: 3000,
-    // The heartbeat closes the socket if no message arrives within `timeout`, and otherwise
-    // sends `message` every `interval`. Both run off a single setInterval. While the Segra
-    // window is backgrounded during gameplay, Chromium/WebView2 throttles timers to fire at
-    // most about once every 60 seconds. `interval` must stay below that floor so each throttled
-    // tick still emits a ping (which the backend answers, resetting the timeout), and `timeout`
-    // must stay well above it so one slow tick can't trip the close.
     heartbeat: {
       message: 'ping',
       timeout: 120000,
