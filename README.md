@@ -1,113 +1,116 @@
-<img height="100" src="https://cdn.segra.tv/icon.png"/>
+<p align="center">
+  <img src="./icon.png" width="96" alt="Fentware Clips logo" />
+</p>
 
-**Segra** is an open-source game recorder built on Open Broadcaster Software (OBS). It records your games in the background, lets you clip the good parts with a hotkey, and uploads them to [Segra.tv](https://segra.tv).
+# Fentware Clips
 
-### Clip Editor
+**Fentware Clips** is a local-first game recording and clipping app for Windows. It runs in the background, detects games, records gameplay, and lets you save the moments you want with a hotkey.
 
-![image](https://github.com/user-attachments/assets/beed0524-35f1-48be-9dd8-c2455959d2f9)
+This project is a customized fork of the open-source **Segra** recorder, with Fentware branding and a standalone/local-only focus.
 
-### Highlights
+> **Current status:** early alpha / friends testing. Expect bugs, rough edges, and changes between builds.
 
-![image](https://github.com/user-attachments/assets/481cc9fa-3efb-412d-b668-8be7d11b9851)
+## Features
 
-
-### Settings
-
-![image](https://github.com/user-attachments/assets/de300431-1b63-4ed2-a022-110f8f828d1a)
-
-
----
-
-## Features  
-- Auto-starts recording when a game launches
-- Replay buffer, save the last moments with a hotkey
-- Up to 4K 144 FPS, HDR on Windows
-- H.264, HEVC and AV1 (NVENC, AMD AMF, Intel QSV or x264)
-- Multiple audio devices, separate audio tracks, mic noise suppression
+- Automatic game detection and background recording
+- Replay buffer for saving the last moments with a hotkey
+- Up to 4K / high-framerate recording depending on hardware
+- H.264, HEVC and AV1 support through supported encoders
+- NVIDIA NVENC, AMD AMF, Intel QSV and x264 support
+- Multiple audio devices and separate audio tracks
+- Microphone noise suppression
+- Local clip library
 - Clip editor with timeline and audio waveform
-- Auto highlights from kill/death tracking in CS2, League, Dota 2, PUBG, Rocket League, Rust, Minecraft, RuneScape: Dragonwilds, War Thunder and GTA
-- Upload to **[Segra.tv](https://segra.tv)**
-- Per-game overrides for quality, recording mode, HDR and volume
-- Storage limit auto-deletes old recordings
+- Per-game recording overrides
+- Storage limits and automatic cleanup of old recordings
+- Local file import and management
 
----
+## Local-only build
 
-## Why "Segra"?  
-**Segra** (pronounced *"say-grah"*) means **"to win"** in Swedish. We built Segra to help you preserve those moments: the chaotic fun with friends, the clutch plays, and the wins (*segra!*) that deserve their own highlight reel.  
+The current Fentware Clips branch is intentionally focused on local recording and clip management.
 
----
+The Fentware build does **not** use Segra.tv accounts, Segra cloud uploads, Discord authentication, or Segra's updater services. Those remote service paths have been disabled for this standalone fork.
 
-## Installation
+Your recordings and clips are stored on your own machine. The recording directory can be changed from the app settings.
 
-### Windows
-1. **Download**: Get `Segra-win-Setup.exe` from the [latest release](https://github.com/Segergren/Segra/releases/latest).  
-2. **Install**: Run the setup.  
-3. **Configure**:  
-   - Set recording directory and video quality.  
-   - Assign hotkeys for clipping/uploading.  
-   - Connect your Segra.tv account.  
+## Download
 
-### Linux (Alpha)
-Linux support is in early alpha. It might not start at all, and features that work on Windows can be missing or broken. Please do not open GitHub issues for Linux problems yet.
+Prebuilt Windows test builds are published through this repository's **Releases** section when available.
 
-1. Download `Segra.flatpak` from the [latest release](https://github.com/Segergren/Segra/releases/latest).
-2. Install it with `flatpak install Segra.flatpak`.
+For the current friends-testing build:
 
-## Uninstallation
+1. Download the Windows x64 release archive.
+2. Extract the full archive to a folder.
+3. Run `FentwareClips.exe`.
+4. Configure your recording folder, quality, audio devices, and clip hotkey.
 
-### Windows
-1. Open `Windows Settings`
-2. Go to `Apps` -> `Installed apps`
-3. Search for `Segra`
-4. Click `Uninstall`
+Do not move only the `.exe` out of the extracted folder; the application currently ships with additional runtime and native files that it needs beside the executable.
 
-### Linux
-Run `flatpak uninstall tv.segra.Segra`.
+## Building from source
 
-## Contributing  
-See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, dependencies, and dev workflow.
-Help improve Segra by:  
-- Report bugs or suggest features  
-- Submit pull requests
+### Requirements
 
----
+- Windows 10/11 x64
+- .NET 10 SDK
+- Node.js / npm
 
-## License  
-Segra is **GPLv2 licensed**.  
+Clone the repository, then build from the repository root:
 
----
+```powershell
+dotnet build .\Segra.csproj -f net10.0-windows10.0.19041.0
+```
 
-## Code Signing Policy
-<table>
-  <tr>
-    <td><a href="https://signpath.org/" target="_blank"><img src="https://avatars.githubusercontent.com/u/34448643" height="30" alt="SignPath logo" /></a></td>
-    <td>free code signing on Windows provided by <a href="https://signpath.io/" target="_blank">SignPath.io</a>, certificate by <a href="https://signpath.org/" target="_blank">SignPath Foundation</a></td>
-  </tr>
-</table>
+For a self-contained Windows publish build:
 
+```powershell
+dotnet publish .\Segra.csproj `
+  -c Release `
+  -f net10.0-windows10.0.19041.0 `
+  -r win-x64 `
+  --self-contained true `
+  -o .\publish
+```
 
-**Team roles**
+The Windows executable is named:
 
-| Role      | Person |
-|-----------|--------|
-| Authors   | @Segergren |
-| Reviewers | @Segergren |
-| Approvers | @Segergren |
+```text
+FentwareClips.exe
+```
 
-See our [Privacy Policy](https://segra.tv/privacy).
+## Project status
 
-## Star History
+Fentware Clips is currently being separated from Segra's hosted services while keeping the core local recorder, replay buffer, clip editor, game detection, and OBS/libobs recording stack.
 
-<a href="https://www.star-history.com/?type=date&repos=Segergren%2FSegra">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Segergren/Segra&type=date&theme=dark&legend=top-left&sealed_token=JAaIsTwnipw7yKMwYTxXAZTVKOfmPUNhuDq2_b7iPCO4-K-c1tnLij-MXN0o8ZbyGH-ydukOtzcwUcsqXaiT89vKt6uwbFN8sKxKTRX9DGRLb1PPfRBgE7Wk8RrqLcQINaezbgie3IQEx-RMzNP98N3s2eQLQJgAXde2kUEHsgzPYk_DNdNIy58gfLsE" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Segergren/Segra&type=date&legend=top-left&sealed_token=JAaIsTwnipw7yKMwYTxXAZTVKOfmPUNhuDq2_b7iPCO4-K-c1tnLij-MXN0o8ZbyGH-ydukOtzcwUcsqXaiT89vKt6uwbFN8sKxKTRX9DGRLb1PPfRBgE7Wk8RrqLcQINaezbgie3IQEx-RMzNP98N3s2eQLQJgAXde2kUEHsgzPYk_DNdNIy58gfLsE" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Segergren/Segra&type=date&legend=top-left&sealed_token=JAaIsTwnipw7yKMwYTxXAZTVKOfmPUNhuDq2_b7iPCO4-K-c1tnLij-MXN0o8ZbyGH-ydukOtzcwUcsqXaiT89vKt6uwbFN8sKxKTRX9DGRLb1PPfRBgE7Wk8RrqLcQINaezbgie3IQEx-RMzNP98N3s2eQLQJgAXde2kUEHsgzPYk_DNdNIy58gfLsE" />
- </picture>
-</a>
+Some internal namespaces, filenames, storage identifiers, and development tooling may still use the original `Segra` name. These are being changed only where it is safe to do so without breaking compatibility or existing settings.
 
+## Upstream project and attribution
+
+Fentware Clips is derived from **Segra**, originally developed by [Segergren](https://github.com/Segergren/Segra).
+
+The project continues to use substantial portions of Segra's original source code and architecture. Fentware branding does not remove or replace the original project's copyright or license obligations.
+
+## License
+
+This project is distributed under the **GNU General Public License v2.0 (GPL-2.0)**, consistent with the upstream Segra project.
+
+See [LICENSE](LICENSE) for the full license text.
+
+If you distribute modified builds, the GPL requirements continue to apply, including making the corresponding source code available under the same license.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the existing development setup and project workflow.
+
+Bug reports and testing feedback for the Fentware Clips fork are welcome through this repository.
 
 ## Acknowledgments
-- **[OBS Studio](https://obsproject.com)**: Segra records through OBS (libobs).
-- **[ObsKit.NET](https://github.com/Segergren/ObsKit.NET)**: C# bindings for libobs, written for Segra.
-- **[FFmpeg](https://github.com/FFmpeg/FFmpeg)**: for video and image encoding.  
+
+- **[Segra](https://github.com/Segergren/Segra)** — upstream project and original recorder implementation
+- **[OBS Studio](https://obsproject.com)** — recording through libobs
+- **[ObsKit.NET](https://github.com/Segergren/ObsKit.NET)** — C# bindings used for libobs integration
+- **[FFmpeg](https://github.com/FFmpeg/FFmpeg)** — video and image processing/encoding
+- **[Photino.NET](https://github.com/tryphotino/photino.NET)** — desktop application shell
+
+---
+
+**Fentware Clips is not affiliated with or endorsed by the upstream Segra project.**
