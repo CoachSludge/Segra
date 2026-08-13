@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useSettings, useSettingsUpdater } from '../Context/SettingsContext';
 import { useUpdate } from '../Context/UpdateContext';
-import AccountSection from '../Components/Settings/AccountSection';
 import CaptureModeSection from '../Components/Settings/CaptureModeSection';
 import VideoSettingsSection from '../Components/Settings/VideoSettingsSection';
 import StorageSettingsSection from '../Components/Settings/StorageSettingsSection';
@@ -15,11 +14,9 @@ import PreferencesSection from '../Components/Settings/PreferencesSection';
 import MenuCustomizationSection from '../Components/Settings/MenuCustomizationSection';
 import AdvancedSection from '../Components/Settings/AdvancedSection';
 
-type SectionId =
-  'account' | 'recording' | 'clips' | 'games' | 'storage' | 'preferences' | 'advanced';
+type SectionId = 'recording' | 'clips' | 'games' | 'storage' | 'preferences' | 'advanced';
 
-const ALL_NAV_ITEMS: { id: SectionId; label: string }[] = [
-  { id: 'account', label: 'Account' },
+const NAV_ITEMS: { id: SectionId; label: string }[] = [
   { id: 'recording', label: 'Recording' },
   { id: 'clips', label: 'Clips' },
   { id: 'storage', label: 'Storage' },
@@ -42,13 +39,7 @@ export default function Settings() {
   const { openReleaseNotesModal, checkForUpdates, canSelfUpdate } = useUpdate();
   const settings = useSettings();
   const updateSettings = useSettingsUpdater();
-  // Airplane mode removes the Account section entirely (no login/cloud UI).
-  const navItems = useMemo(
-    () =>
-      settings.airplaneMode ? ALL_NAV_ITEMS.filter((item) => item.id !== 'account') : ALL_NAV_ITEMS,
-    [settings.airplaneMode],
-  );
-  const [activeSection, setActiveSection] = useState<SectionId>(navItems[0].id);
+  const [activeSection, setActiveSection] = useState<SectionId>(NAV_ITEMS[0].id);
 
   const scrollToSection = (id: SectionId) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -56,11 +47,10 @@ export default function Settings() {
 
   // Scroll spy to track which section is currently visible
   useEffect(() => {
-    // The settings page scrolls inside an ancestor container; find it so we can detect the very top.
     let scroller: HTMLElement | null = null;
     const getScroller = (): HTMLElement | null => {
       if (scroller?.isConnected) return scroller;
-      let node = document.getElementById(navItems[0].id)?.parentElement ?? null;
+      let node = document.getElementById(NAV_ITEMS[0].id)?.parentElement ?? null;
       while (node) {
         const overflowY = getComputedStyle(node).overflowY;
         if (
@@ -76,36 +66,32 @@ export default function Settings() {
     };
 
     const handleScroll = () => {
-      // At the very top, always select the first section (Account); the upper-third check below
-      // otherwise picks whichever later heading already sits above the line.
       if ((getScroller()?.scrollTop ?? 0) <= 0) {
-        setActiveSection(navItems[0].id);
+        setActiveSection(NAV_ITEMS[0].id);
         return;
       }
 
-      const viewportCenter = window.innerHeight / 2.3; // Check upper-third of viewport
+      const viewportCenter = window.innerHeight / 2.3;
 
-      // Find the last section whose top has passed the check point
-      for (let i = navItems.length - 1; i >= 0; i--) {
-        const element = document.getElementById(navItems[i].id);
+      for (let i = NAV_ITEMS.length - 1; i >= 0; i--) {
+        const element = document.getElementById(NAV_ITEMS[i].id);
         if (element) {
           const rect = element.getBoundingClientRect();
           if (rect.top <= viewportCenter) {
-            setActiveSection(navItems[i].id);
+            setActiveSection(NAV_ITEMS[i].id);
             return;
           }
         }
       }
 
-      // Default to first section if none found
-      setActiveSection(navItems[0].id);
+      setActiveSection(NAV_ITEMS[0].id);
     };
 
     window.addEventListener('scroll', handleScroll, true);
-    handleScroll(); // Initial check
+    handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll, true);
-  }, [navItems]);
+  }, []);
 
   return (
     <div className="min-h-full bg-base-200 dark:bg-base-300">
@@ -114,7 +100,7 @@ export default function Settings() {
         <div className="flex items-center gap-6">
           <h1 className="text-2xl font-bold">Settings</h1>
           <nav className="flex gap-1">
-            {navItems.map((item) => (
+            {NAV_ITEMS.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
@@ -133,14 +119,6 @@ export default function Settings() {
 
       {/* Content */}
       <div className="p-5 space-y-6">
-        {/* ACCOUNT */}
-        {!settings.airplaneMode && (
-          <>
-            <SectionHeader id="account">Account</SectionHeader>
-            <AccountSection />
-          </>
-        )}
-
         {/* RECORDING */}
         <SectionHeader id="recording">Recording</SectionHeader>
         <CaptureModeSection settings={settings} updateSettings={updateSettings} />
