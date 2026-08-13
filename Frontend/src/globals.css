@@ -7,32 +7,33 @@
   name: 'segra';
   default: true;
   color-scheme: dark;
-  /* Dina färger (oförändrade) */
-  --color-primary: #fecb00;
-  --color-secondary: #171f2a;
-  --color-accent: #fecb00;
-  --color-neutral: #142638;
-  --color-base-100: #132733;
-  --color-base-200: #15232f;
-  --color-base-300: #171f2a;
-  --color-base-content: #ffffff;
-  --color-info: #005293;
-  --color-success: #36d399;
-  --color-warning: #ffd481;
-  --color-error: #f87272;
-  --color-primary-content: var(--color-base-100);
+
+  /* Fentware graphite + glass palette */
+  --color-primary: #5fd7d1;
+  --color-secondary: #171a1e;
+  --color-accent: #5fd7d1;
+  --color-neutral: #111418;
+  --color-base-100: #0b0d10;
+  --color-base-200: #111418;
+  --color-base-300: #181c21;
+  --color-base-content: #f3f5f7;
+  --color-info: #57b8cf;
+  --color-success: #4ade80;
+  --color-warning: #f0b85a;
+  --color-error: #ef5555;
+  --color-primary-content: #071010;
+
   --card-p: 1rem;
-  /* DaisyUI v5 tokens – matcha v4-defaults */
-  --radius-box: 1rem; /* v4: --rounded-box: 1rem */
-  --radius-field: 0.5rem; /* v4: --rounded-btn: 0.5rem */
-  --radius-selector: 0.45rem; /* v4: --rounded-badge: 1.9rem */
-  /* Storleksskala (px, skriv som siffra utan enhet) – rimlig v4-känsla */
+
+  /* DaisyUI v5 tokens */
+  --radius-box: 1rem;
+  --radius-field: 0.5rem;
+  --radius-selector: 0.45rem;
   --size-selector: 0.25rem;
   --size-field: 0.3rem;
-  /* Kantlinje & effekter */
-  --border: 1px; /* v4 hade 1px på knappar/flikar */
-  --depth: 0; /* v4 hade inget djup */
-  --noise: 0; /* v4 hade ingen noise */
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
 
 /* Hide the scrollbar while keeping the element scrollable (used by the game tabs strip). */
@@ -60,25 +61,38 @@
       background-color: var(--btn-bg) !important;
     }
   }
+
+  /* Fentware glass treatment for common DaisyUI surfaces without changing layout. */
+  .card,
+  .modal-box,
+  .dropdown-content {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .modal-box,
+  .dropdown-content {
+    background-color: rgba(24, 28, 33, 0.94);
+    backdrop-filter: blur(14px);
+  }
 }
 
 @theme {
-  --color-base-400: #49515b;
-  --color-custom: #2e3640;
-  --color-primary-yellow: #fecb00;
+  --color-base-400: #2b3138;
+  --color-custom: #30373f;
+  --color-primary-yellow: #5fd7d1;
 }
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 243, 245, 247;
+  --background-start-rgb: 11, 13, 16;
+  --background-end-rgb: 17, 20, 24;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 243, 245, 247;
+    --background-start-rgb: 11, 13, 16;
+    --background-end-rgb: 17, 20, 24;
   }
 }
 
@@ -106,7 +120,7 @@
 }
 
 .highlight-border {
-  background: linear-gradient(-450deg, #7928ca, #ff0080, #1c64f2, #00d4ff, #7928ca);
+  background: linear-gradient(-450deg, #2b3138, #5fd7d1, #8a949d, #79e5df, #2b3138);
   background-size: 300% 300%;
   animation: highlightBorderAnimation 8s ease infinite;
   z-index: 1;
@@ -154,7 +168,7 @@
   animation: import-pulse 0.9s ease-in-out 0.7s 2;
 }
 
-/* Flash a button's border and text yellow twice (Add Segment hint) */
+/* Flash a button's border and text using the active accent twice (Add Segment hint) */
 @keyframes segment-hint-flash {
   50% {
     border-color: var(--color-accent);
