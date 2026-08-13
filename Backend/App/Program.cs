@@ -625,7 +625,7 @@ namespace Segra.Backend.App
             Log.Information("Window variable has been set");
 
             // intentional space after name because of https://github.com/tryphotino/photino.NET/issues/106
-            Window.SetTitle("Segra ");
+            Window.SetTitle("FENTWARE CLIPS ");
 
             // Track the last normal (not maximized/minimized) bounds so SaveWindowState can persist
             // a sensible restore size even when the window is closed while maximized.
