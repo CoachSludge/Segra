@@ -8,24 +8,22 @@
   default: true;
   color-scheme: dark;
 
-  /* Fentware graphite + glass palette */
+  /* Fentware black glass + teal palette */
   --color-primary: #5fd7d1;
-  --color-secondary: #171a1e;
+  --color-secondary: #101215;
   --color-accent: #5fd7d1;
-  --color-neutral: #111418;
-  --color-base-100: #0b0d10;
-  --color-base-200: #111418;
-  --color-base-300: #181c21;
-  --color-base-content: #f3f5f7;
-  --color-info: #57b8cf;
-  --color-success: #4ade80;
-  --color-warning: #f0b85a;
-  --color-error: #ef5555;
-  --color-primary-content: #071010;
+  --color-neutral: #090b0d;
+  --color-base-100: #020205;
+  --color-base-200: #08090b;
+  --color-base-300: #0d0f12;
+  --color-base-content: #f4f6f7;
+  --color-info: #57c9cf;
+  --color-success: #79e39b;
+  --color-warning: #ffd98a;
+  --color-error: #ff5b5b;
+  --color-primary-content: #04100f;
 
   --card-p: 1rem;
-
-  /* DaisyUI v5 tokens */
   --radius-box: 1rem;
   --radius-field: 0.5rem;
   --radius-selector: 0.45rem;
@@ -36,7 +34,65 @@
   --noise: 0;
 }
 
-/* Hide the scrollbar while keeping the element scrollable (used by the game tabs strip). */
+:root {
+  --fent-glass: rgba(255, 255, 255, 0.055);
+  --fent-glass-strong: rgba(255, 255, 255, 0.105);
+  --fent-line: rgba(255, 255, 255, 0.16);
+  --fent-text: rgba(255, 255, 255, 0.92);
+  --fent-muted: rgba(255, 255, 255, 0.56);
+  --fent-faint: rgba(255, 255, 255, 0.28);
+  --fent-shadow: rgba(0, 0, 0, 0.65);
+  --foreground-rgb: 244, 246, 247;
+  --background-start-rgb: 2, 2, 5;
+  --background-end-rgb: 0, 0, 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background: #020205;
+}
+
+body {
+  margin: 0;
+  color: var(--fent-text);
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.07), transparent 27%),
+    radial-gradient(circle at 78% 8%, rgba(95, 215, 209, 0.045), transparent 30%),
+    linear-gradient(135deg, #010102 0%, #08090b 48%, #000 100%);
+}
+
+/* Fentware display / identity typography */
+h1,
+h2,
+h3,
+.card-title,
+.modal-title {
+  font-family: 'Rubik Glitch', Impact, 'Arial Black', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Fentware UI / system typography */
+button,
+.btn,
+select,
+option,
+.badge,
+.tab,
+[role='tab'] {
+  font-family: 'Rubik Mono One', Impact, 'Arial Black', sans-serif;
+  letter-spacing: 0.035em;
+}
+
+input,
+textarea {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Hide the scrollbar while keeping the element scrollable. */
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -49,50 +105,99 @@
   .checkbox {
     color: var(--color-base-300) !important;
   }
+
   .tooltip[data-tip]::before {
     color: var(--color-base-300) !important;
   }
+
   .btn:is(:disabled, [disabled], .btn-disabled):not(.btn-link, .btn-ghost) {
     background-color: var(--btn-bg) !important;
-    box-shadow: var(--btn-shadow) !important;
   }
+
   @media (hover: hover) {
     .btn:is(:disabled, [disabled], .btn-disabled):hover {
       background-color: var(--btn-bg) !important;
     }
   }
 
-  /* Fentware glass treatment for common DaisyUI surfaces without changing layout. */
+  /* Glass treatment for common app surfaces without changing layout. */
   .card,
   .modal-box,
   .dropdown-content {
-    border-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--fent-line);
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018)),
+      rgba(0, 0, 0, 0.36);
+    backdrop-filter: blur(16px);
+    box-shadow:
+      0 18px 50px rgba(0, 0, 0, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.10);
   }
 
-  .modal-box,
-  .dropdown-content {
-    background-color: rgba(24, 28, 33, 0.94);
-    backdrop-filter: blur(14px);
+  .btn:not(.btn-ghost),
+  select,
+  input,
+  textarea {
+    border-color: rgba(255, 255, 255, 0.13);
   }
+
+  .btn:not(.btn-ghost) {
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.018)),
+      rgba(0, 0, 0, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .btn:not(.btn-ghost):hover {
+    border-color: rgba(95, 215, 209, 0.42);
+    background:
+      linear-gradient(145deg, rgba(95, 215, 209, 0.12), rgba(255, 255, 255, 0.025)),
+      rgba(0, 0, 0, 0.34);
+  }
+}
+
+/* Tailwind background utilities are used heavily by Segra; make the main shell glassy globally. */
+.bg-base-300 {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    rgba(5, 6, 8, 0.86) !important;
+  backdrop-filter: blur(18px);
+}
+
+.bg-base-200 {
+  background-color: rgba(8, 9, 11, 0.78) !important;
+}
+
+.bg-base-100 {
+  background-color: rgba(2, 2, 5, 0.76) !important;
+}
+
+.border-base-400,
+.border-custom {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.text-gray-300,
+.text-gray-400 {
+  color: rgba(255, 255, 255, 0.64) !important;
+}
+
+.text-gray-500,
+.text-gray-600 {
+  color: rgba(255, 255, 255, 0.38) !important;
 }
 
 @theme {
-  --color-base-400: #2b3138;
-  --color-custom: #30373f;
+  --color-base-400: #30343a;
+  --color-custom: #262b31;
   --color-primary-yellow: #5fd7d1;
-}
-
-:root {
-  --foreground-rgb: 243, 245, 247;
-  --background-start-rgb: 11, 13, 16;
-  --background-end-rgb: 17, 20, 24;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 243, 245, 247;
-    --background-start-rgb: 11, 13, 16;
-    --background-end-rgb: 17, 20, 24;
+    --foreground-rgb: 244, 246, 247;
+    --background-start-rgb: 2, 2, 5;
+    --background-end-rgb: 0, 0, 0;
   }
 }
 
@@ -102,7 +207,6 @@
   }
 }
 
-/* Highlight card gradient border animation */
 @keyframes highlightBorderAnimation {
   0% {
     background-position: 0% 50%;
@@ -120,13 +224,12 @@
 }
 
 .highlight-border {
-  background: linear-gradient(-450deg, #2b3138, #5fd7d1, #8a949d, #79e5df, #2b3138);
+  background: linear-gradient(-450deg, #1e2227, #5fd7d1, #a6adb3, #79e5df, #1e2227);
   background-size: 300% 300%;
   animation: highlightBorderAnimation 8s ease infinite;
   z-index: 1;
 }
 
-/* Shockwave animation for bookmark creation */
 @keyframes shockwave {
   0% {
     width: 0;
@@ -168,7 +271,6 @@
   animation: import-pulse 0.9s ease-in-out 0.7s 2;
 }
 
-/* Flash a button's border and text using the active accent twice (Add Segment hint) */
 @keyframes segment-hint-flash {
   50% {
     border-color: var(--color-accent);
@@ -180,21 +282,16 @@
   animation: segment-hint-flash 0.65s ease-in-out 2;
 }
 
-/* Keep the playhead cursor while dragging it, wherever the pointer is */
 body.dragging-playhead,
 body.dragging-playhead * {
   cursor: pointer !important;
 }
 
-/* Remove all focus rings globally */
-*,
+/* Remove focus rings without flattening every element's normal shadow. */
 *:focus,
 *:focus-visible,
 *:focus-within,
-dialog,
-dialog:focus,
-.modal,
-.modal-box {
+dialog:focus {
   outline: none !important;
   outline-width: 0 !important;
   outline-style: none !important;
@@ -204,5 +301,4 @@ dialog:focus,
   --tw-ring-width: 0px !important;
   --tw-ring-color: transparent !important;
   --tw-ring-offset-color: transparent !important;
-  box-shadow: none !important;
 }
